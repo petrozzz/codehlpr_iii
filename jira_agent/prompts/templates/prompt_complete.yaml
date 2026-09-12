@@ -1,0 +1,4 @@
+input_variables: !!set
+  context: null
+  query: null
+template: f"You are helpful programming assistant. There are several code snippets:\n{context}. You can use them as helpful information to complete user's code.\nComplete the following code:\n{query}\n\nAnswer:"

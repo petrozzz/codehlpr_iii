@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 Интеллектуальный Аудит Банковских Систем</title>
+    <!-- Base tag ДОЛЖЕН быть перед всеми ссылками для корректной работы относительных путей -->
+    {% if root_path %}
+    <base href="{{ root_path }}/">{% endif %}
+    <!-- Локальные версии внешних библиотек (для работы без интернета) -->
+    <!-- Используем относительные пути - они наследуют протокол страницы (HTTPS) -->
+    <link href="static/css/vendor/inter-font.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/main.css?v=5.3.0">
+    <link rel="stylesheet" href="static/css/agent.css">
+    <link rel="stylesheet" href="static/css/requirements-editor.css">
+    <link rel="stylesheet" href="static/css/chat.css">
+    <link rel="stylesheet" href="static/css/vendor/font-awesome.min.css">
+    <!-- Глобальная переменная для API URL -->
+    <script>
+        window.API_BASE_URL = "{{ root_path }}";
+    </script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Главная навигационная панель -->
+        <header class="main-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">🧠</div>
+                    <h1 class="app-title">Интеллектуальный Аудитор</h1>
+                    <span class="version-badge">v3.1</span>
+                </div>
+
+                <div class="status-indicator">
+                    <div class="status-dot" id="system-status"></div>
+                    <span class="status-text" id="status-text">Система готова</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Боковая панель с настройками -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3><img src="static/icons/cogs.svg" class="icon" alt=""> Настройки</h3>
+            </div>
+
+            <div class="settings-section">
+                <h4>🤖 ИИ-Провайдер</h4>
+                <div class="radio-group">
+                    <label class="radio-item">
+                        <input type="radio" name="ai-provider" value="gemini" checked>
+                        <span class="radio-custom"></span>
+                        <div class="provider-info">
+                            <span class="provider-name">Google Gemini</span>
+                            <small>Продвинутый анализ</small>
+                        </div>
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="ai-provider" value="gigachat">
+                        <span class="radio-custom"></span>
+                        <div class="provider-info">
+                            <span class="provider-name">GigaChat</span>
+                            <small>Локальные данные</small>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="input-group">
+                    <label>API Ключ</label>
+                    <input type="password" id="api-key" placeholder="Введите API ключ">
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h4>⚙️ Параметры анализа</h4>
+                <div class="input-group">
+                    <label>Макс. размер файла (МБ)</label>
+                    <input type="range" id="max-file-size" min="1" max="200" value="20" class="slider">
+                    <span class="slider-value">20 МБ</span>
+                </div>
+
+                <!-- Параллелизм убран для стабильности WebSocket
+                <div class="input-group">
+                    <label>Параллелизм</label>
+                    <input type="range" id="max-workers" min="1" max="32" value="4" class="slider">
+                    <span class="slider-value">4 потока</span>
+                </div>
+                -->
+            </div>
+
+            <div class="settings-section">
+                <h4>🔧 Возможности</h4>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="architecture-analysis" checked>
+                        <span class="checkbox-custom"></span>
+                        Архитектурный анализ
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="quality-metrics" checked>
+                        <span class="checkbox-custom"></span>
+                        Метрики качества
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="banking-commands" checked>
+                        <span class="checkbox-custom"></span>
+                        Банковские команды
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Основное содержимое -->
+        <main class="main-content">
+            <!-- Секция загрузки -->
+            <section class="upload-section">
+                <h2><img src="static/icons/upload.svg" class="icon" alt=""> Загрузка проекта</h2>
+
+                <div class="upload-grid">
+                    <div class="upload-card">
+                        <div class="upload-icon">📂</div>
+                        <h3>Система для аудита</h3>
+                        <div class="file-upload" id="project-upload">
+                            <input type="file" id="project-file" accept=".zip" hidden>
+                            <div class="upload-area" onclick="document.getElementById('project-file').click()">
+                                <img src="static/icons/cloud-upload.svg" class="icon-large" alt="">
+                                <p>Перетащите ZIP-архив или нажмите для выбора</p>
+                                <small>Поддерживаются архивы до 500 МБ</small>
+                            </div>
+                        </div>
+                        <div class="file-info" id="project-info" style="display: none;">
+                            <img src="static/icons/check-circle.svg" class="icon text-success" alt="">
+                            <span class="filename"></span>
+                            <button class="btn-remove" onclick="removeFile('project')">×</button>
+                        </div>
+                    </div>
+
+                    <div class="upload-card">
+                        <div class="upload-icon">📄</div>
+                        <h3>Требования аудита</h3>
+                        <div class="file-upload" id="requirements-upload">
+                            <input type="file" id="requirements-file" accept=".pdf,.docx,.txt" hidden>
+                            <div class="upload-area" onclick="document.getElementById('requirements-file').click()">
+                                <img src="static/icons/file.svg" class="icon-large" alt="">
+                                <p>Загрузите документ с требованиями</p>
+                                <small>PDF, DOCX или TXT</small>
+                            </div>
+                        </div>
+                        <div class="file-info" id="requirements-info" style="display: none;">
+                            <img src="static/icons/check-circle.svg" class="icon text-success" alt="">
+                            <span class="filename"></span>
+                            <button class="btn-remove" onclick="removeFile('requirements')">×</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-name-section">
+                    <div class="input-group">
+                        <label for="project-name">Название проекта</label>
+                        <input type="text" id="project-name" placeholder="Введите название проекта"
+                            class="project-input">
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="extract-requirements-btn" style="display: none;">
+                        <img src="static/icons/magic.svg" class="icon" alt="">
+                        Извлечь требования через LLM
+                    </button>
+                </div>
+            </section>
+
+            <!-- Секция редактирования требований -->
+            <section class="requirements-section" id="requirements-section" style="display: none;">
+                <h2><img src="static/icons/edit.svg" class="icon" alt=""> Редактирование требований</h2>
+
+                <div class="extraction-progress" id="extraction-progress" style="display: none;">
+                    <div class="progress-header">
+                        <span class="progress-label">Извлечение требований...</span>
+                        <span class="progress-percentage" id="extraction-percentage">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="extraction-fill"></div>
+                    </div>
+                    <div class="progress-details">
+                        <span id="extraction-status">Инициализация...</span>
+                    </div>
+                </div>
+
+                <div class="requirements-editor" id="requirements-editor" style="display: none;">
+                    <div class="editor-header">
+                        <p class="editor-hint">
+                            <img src="static/icons/info-circle.svg" class="icon" alt="">
+                            Отредактируйте извлечённые требования перед началом анализа
+                        </p>
+                        <div class="editor-actions">
+                            <button class="btn-small btn-secondary" id="add-requirement-btn">
+                                <img src="static/icons/plus.svg" class="icon" alt=""> Добавить
+                            </button>
+                            <button class="btn-small btn-danger" id="remove-selected-btn">
+                                <img src="static/icons/trash.svg" class="icon" alt=""> Удалить выбранные
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="requirements-list" id="requirements-list">
+                        <!-- Требования будут добавлены динамически -->
+                    </div>
+
+                    <div class="editor-footer">
+                        <button class="btn btn-success" id="save-requirements-btn">
+                            <img src="static/icons/check.svg" class="icon" alt="">
+                            Сохранить и начать аудит
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Секция анализа -->
+            <section class="analysis-section" id="analysis-section" style="display: none;">
+                <h2><img src="static/icons/brain.svg" class="icon" alt=""> Интеллектуальный анализ</h2>
+
+                <!-- Контейнер для ИИ агента -->
+                <div class="agent-container" id="agent-container">
+                    <div class="agent-header">
+                        <div class="agent-avatar">
+                            <div class="avatar-circle">
+                                <img src="static/icons/robot.svg" class="icon-avatar" alt="">
+                            </div>
+                            <div class="status-pulse"></div>
+                        </div>
+                        <div class="agent-info">
+                            <h3 class="agent-name">ИИ-Аудитор</h3>
+                            <p class="agent-status" id="agent-status">Готов к анализу</p>
+                        </div>
+                        <div class="agent-controls">
+                            <button class="btn-control" id="pause-btn" title="Пауза">
+                                <img src="static/icons/pause.svg" class="icon" alt="">
+                            </button>
+                            <button class="btn-control" id="stop-btn" title="Остановить">
+                                <img src="static/icons/stop.svg" class="icon" alt="">
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="agent-workspace" id="agent-workspace">
+                        <!-- 🔥 НОВЫЙ ТЕРМИНАЛ С РЕАЛЬНЫМИ КОМАНДАМИ -->
+                        <div id="terminal-container"></div>
+                    </div>
+                </div>
+
+                <!-- Прогресс анализа -->
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span class="progress-label">Прогресс анализа</span>
+                        <span class="progress-percentage">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="progress-details">
+                        <span id="current-requirement">Ожидание запуска...</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Секция результатов -->
+            <section class="results-section" id="results-section" style="display: none;">
+                <h2><img src="static/icons/chart-line.svg" class="icon" alt=""> Результаты аудита</h2>
+
+                <div class="results-summary">
+                    <div class="metric-card success">
+                        <div class="metric-icon">✅</div>
+                        <div class="metric-info">
+                            <span class="metric-value" id="passed-count">0</span>
+                            <span class="metric-label">Выполнено</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card danger">
+                        <div class="metric-icon">❌</div>
+                        <div class="metric-info">
+                            <span class="metric-value" id="failed-count">0</span>
+                            <span class="metric-label">Нарушения</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card warning">
+                        <div class="metric-icon">❓</div>
+                        <div class="metric-info">
+                            <span class="metric-value" id="unclear-count">0</span>
+                            <span class="metric-label">Неопределено</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card info">
+                        <div class="metric-icon">📊</div>
+                        <div class="metric-info">
+                            <span class="metric-value" id="total-count">0</span>
+                            <span class="metric-label">Всего</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results-table-container">
+                    <table class="results-table" id="results-table">
+                        <thead>
+                            <tr>
+                                <th>Требование</th>
+                                <th>Статус</th>
+                                <th>Заключение ИИ</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-tbody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Кнопки действий -->
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="extract-requirements-btn">
+                    <img src="static/icons/search.svg" class="icon" alt="">
+                    Извлечь требования
+                </button>
+                <button class="btn btn-success" id="start-audit-btn" style="display: none;">
+                    <img src="static/icons/play.svg" class="icon" alt="">
+                    Начать аудит
+                </button>
+                <button class="btn btn-info" id="show-results-btn" style="display: none;">
+                    <img src="static/icons/chart-bar.svg" class="icon" alt="">
+                    Показать результаты
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Модальное окно деталей -->
+    <div id="details-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Детали требования</h3>
+                <span class="close-btn"
+                    onclick="document.getElementById('details-modal').style.display='none'">&times;</span>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Контейнер для результатов анализа -->
+                <div id="modal-analysis-content"></div>
+
+                <!-- Секция чата (теперь внутри body) -->
+                <div class="chat-section" style="border-top: 1px solid #eee; margin-top: 20px; padding-top: 20px;">
+                    <h4>💬 Чат с агентом</h4>
+                    <div id="chat-context-info" style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">
+                        <!-- Инфо о контексте -->
+                    </div>
+                    <div id="chat-container"
+                        style="height: 300px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; padding: 15px; background: #f9fafb; margin-bottom: 15px;">
+                        <div class="chat-message system">
+                            Задайте вопрос по этому требованию. Агент может изучить код дополнительно.
+                        </div>
+                    </div>
+                    <div class="chat-input-area" style="display: flex; gap: 10px;">
+                        <input type="text" id="chat-input" class="form-control"
+                            placeholder="Например: Покажи функцию валидации..." style="flex: 1;">
+                        <button class="btn btn-primary" onclick="auditInterface.sendChatMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Уведомления -->
+    <div class="notifications" id="notifications"></div>
+
+    <!-- Убеждаемся в правильном порядке загрузки скриптов -->
+    <!-- v5.0: РЕАЛЬНЫЙ LINUX ТЕРМИНАЛ С ЭФФЕКТОМ ПЕЧАТИ -->
+    <script src="static/js/vendor/marked.min.js"></script>
+    <script src="static/js/real-terminal.js?v=6.1.0"></script>
+    <script src="static/js/requirements-editor.js?v=6.1.0"></script>
+    <script src="static/js/api.js?v=5.0.0"></script>
+    <script src="static/js/main.js?v=5.6.0"></script>
+
+    <!-- Управление провайдером ИИ -->
+    <script>
+        // Переключение видимости поля API ключа в зависимости от провайдера
+        document.addEventListener('DOMContentLoaded', () => {
+            const providerRadios = document.querySelectorAll('input[name="ai-provider"]');
+            const apiKeyGroup = document.querySelector('.input-group:has(#api-key)');
+
+            function updateApiKeyVisibility() {
+                const selectedProvider = document.querySelector('input[name="ai-provider"]:checked')?.value;
+                if (selectedProvider === 'gigachat') {
+                    // GigaChat использует переменные окружения - скрываем поле ключа
+                    if (apiKeyGroup) {
+                        apiKeyGroup.style.display = 'none';
+                    }
+                } else {
+                    // Gemini требует API ключ - показываем поле
+                    if (apiKeyGroup) {
+                        apiKeyGroup.style.display = 'block';
+                    }
+                }
+            }
+
+            // Устанавливаем начальное состояние
+            updateApiKeyVisibility();
+
+            // Слушаем изменения провайдера
+            providerRadios.forEach(radio => {
+                radio.addEventListener('change', updateApiKeyVisibility);
+            });
+        });
+    </script>
+
+    <!-- Дополнительная диагностика загрузки -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🔧 DOM готов, проверяю загрузку скриптов:');
+            console.log('SmartStatusManager:', typeof window.SmartStatusManager !== 'undefined' ? '✅' : '❌');
+            console.log('smartStatusManager instance:', typeof window.smartStatusManager !== 'undefined' ? '✅' : '❌');
+            console.log('apiClient:', typeof window.apiClient !== 'undefined' ? '✅' : '❌');
+            console.log('auditInterface:', typeof window.auditInterface !== 'undefined' ? '✅' : '❌');
+
+            // Проверяем наличие DOM элементов
+            console.log('🔧 Проверяю DOM элементы:');
+            console.log('agent-status:', !!document.getElementById('agent-status') ? '✅' : '❌');
+            console.log('current-status-content:', !!document.getElementById('current-status-content') ? '✅' : '❌');
+            console.log('commands-section:', !!document.getElementById('commands-section') ? '✅' : '❌');
+            console.log('commands-content:', !!document.getElementById('commands-content') ? '✅' : '❌');
+        });
+    </script>
+</body>
+
+</html>

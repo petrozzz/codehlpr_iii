@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 Демонстрация ИИ-Агента</title>
+    <!-- Локальные версии внешних библиотек (для работы без интернета) -->
+    <link href="../static/css/vendor/font-awesome.min.css" rel="stylesheet">
+    <link href="../static/css/vendor/inter-font.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="../static/css/agent.css">
+    <style>
+        .demo-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .demo-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.05"><circle cx="30" cy="30" r="2"/></g></svg>') repeat;
+            pointer-events: none;
+        }
+        
+        .demo-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .demo-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .demo-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+        
+        .demo-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+        
+        .demo-btn {
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--radius-lg);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all var(--transition-normal);
+            backdrop-filter: blur(10px);
+        }
+        
+        .demo-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--info-color));
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        
+        .feature-list li::before {
+            content: '✓';
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .demo-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .demo-section {
+            margin-bottom: 3rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .section-description {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-header">
+        <div class="demo-content">
+            <h1 class="demo-title">🧠 Интеллектуальный ИИ-Агент</h1>
+            <p class="demo-subtitle">Демонстрация современного интерфейса для банковского аудита</p>
+            <div class="demo-buttons">
+                <a href="/" class="demo-btn">
+                    <i class="fas fa-rocket"></i> Начать аудит
+                </a>
+                <button class="demo-btn" onclick="startDemo()">
+                    <i class="fas fa-play"></i> Запустить демо
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🎨</div>
+            <h3 class="feature-title">Современный дизайн</h3>
+            <p class="feature-description">
+                Минималистичный и элегантный интерфейс, созданный с учетом современных принципов UX/UI дизайна.
+            </p>
+            <ul class="feature-list">
+                <li>Адаптивный дизайн для всех устройств</li>
+                <li>Плавные анимации и переходы</li>
+                <li>Интуитивная навигация</li>
+                <li>Приятная цветовая схема</li>
+            </ul>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🤖</div>
+            <h3 class="feature-title">ИИ-Агент с визуализацией</h3>
+            <p class="feature-description">
+                Уникальная визуализация процесса мышления ИИ-агента в режиме реального времени.
+            </p>
+            <ul class="feature-list">
+                <li>Отображение фаз анализа</li>
+                <li>Визуализация мыслей агента</li>
+                <li>Показ выполняемых команд</li>
+                <li>RAG поиск с деталями</li>
+            </ul>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3 class="feature-title">Real-time обновления</h3>
+            <p class="feature-description">
+                Мгновенные обновления через WebSocket соединение без перезагрузки страницы.
+            </p>
+            <ul class="feature-list">
+                <li>WebSocket для быстрых обновлений</li>
+                <li>Динамический прогресс-бар</li>
+                <li>Живые уведомления</li>
+                <li>Асинхронная обработка</li>
+            </ul>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🏗️</div>
+            <h3 class="feature-title">Архитектурный анализ</h3>
+            <p class="feature-description">
+                Глубокий анализ архитектуры проекта с определением технологического стека и паттернов.
+            </p>
+            <ul class="feature-list">
+                <li>Определение технологий</li>
+                <li>Анализ паттернов проектирования</li>
+                <li>Оценка качества кода</li>
+                <li>Рекомендации по улучшению</li>
+            </ul>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🏦</div>
+            <h3 class="feature-title">Банковские команды</h3>
+            <p class="feature-description">
+                Специализированные команды для анализа банковских систем и финансового ПО.
+            </p>
+            <ul class="feature-list">
+                <li>Проверка безопасности</li>
+                <li>Анализ транзакций</li>
+                <li>Аудит доступа</li>
+                <li>Соответствие стандартам</li>
+            </ul>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3 class="feature-title">Детальная отчетность</h3>
+            <p class="feature-description">
+                Комплексные отчеты с метриками качества и подробным анализом каждого требования.
+            </p>
+            <ul class="feature-list">
+                <li>Интерактивные таблицы</li>
+                <li>Экспорт в различных форматах</li>
+                <li>Детальные объяснения</li>
+                <li>Исполнительная сводка</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="demo-container">
+        <div class="demo-section">
+            <h2 class="section-title">🎭 Демонстрация ИИ-Агента</h2>
+            <p class="section-description">
+                Посмотрите, как работает интеллектуальный агент при анализе требований
+            </p>
+            
+            <!-- Контейнер для демо агента -->
+            <div class="agent-container" id="demo-agent-container">
+                <div class="agent-header">
+                    <div class="agent-avatar">
+                        <div class="avatar-circle">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="status-pulse"></div>
+                    </div>
+                    <div class="agent-info">
+                        <h3 class="agent-name">ИИ-Аудитор (Демо)</h3>
+                        <p class="agent-status" id="demo-agent-status">Готов к демонстрации</p>
+                    </div>
+                    <div class="agent-controls">
+                        <button class="btn-control" onclick="startDemo()" title="Запустить демо">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="btn-control" onclick="resetDemo()" title="Сброс">
+                            <i class="fas fa-refresh"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="agent-workspace" id="demo-agent-workspace">
+                    <div class="agent-idle-state">
+                        <div class="idle-animation">
+                            <div class="brain-icon">🧠</div>
+                            <div class="pulse-rings">
+                                <div class="pulse-ring"></div>
+                                <div class="pulse-ring"></div>
+                                <div class="pulse-ring"></div>
+                            </div>
+                        </div>
+                        <p class="idle-message">Нажмите "Запустить демо" для демонстрации</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../static/js/agent.js"></script>
+    <script>
+        let demoAgent = null;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Создаем демо-агента
+            demoAgent = new IntelligentAgent();
+            demoAgent.workspace = document.getElementById('demo-agent-workspace');
+        });
+        
+        function startDemo() {
+            if (!demoAgent) return;
+            
+            // Запускаем симуляцию анализа
+            const demoRequirement = "Система должна обеспечивать безопасную аутентификацию пользователей с использованием многофакторной проверки и защиты от атак перебора паролей";
+            
+            demoAgent.simulateThinking(demoRequirement);
+            
+            // Обновляем статус
+            document.getElementById('demo-agent-status').textContent = 'Выполняется демонстрация...';
+        }
+        
+        function resetDemo() {
+            if (!demoAgent) return;
+            
+            demoAgent.reset();
+            document.getElementById('demo-agent-status').textContent = 'Готов к демонстрации';
+        }
+        
+        // Добавляем анимацию появления карточек
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease-out forwards';
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

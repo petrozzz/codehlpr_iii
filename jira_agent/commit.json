@@ -1,0 +1,110 @@
+[
+  {
+    "project": "SUBS",
+    "key": "SUBS-22072",
+    "updated": "2025-07-28T10:49:00.000+0300",
+    "created": "2025-07-28T10:48:20.000+0300",
+    "summary": "[BE] Обновление мета-модели для аудита",
+    "comments": [],
+    "description": "Необходимо обновить мета-модель для аудита по итогам релиза - восстановление подписки, переход от чайлда к паренту."
+  },
+  {
+    "project": "SUBS",
+    "key": "SUBS-22071",
+    "updated": "2025-07-28T10:48:28.000+0300",
+    "created": "2025-07-28T10:47:12.000+0300",
+    "summary": "java.lang.IllegalArgumentException - Padding must be non-negative",
+    "comments": [
+      {
+        "comment_body": "(!) Внимание, команда в поле «Team» не совпадает с командой Исполнителя, при необходимости поменяйте значение вручную. Сервис [«Управление зависимостями»|mailto:dependencies@sberbank.ru] SberWorks.",
+        "comment_last_update": "2025-07-28T10:47:19.117+0300"
+      },
+      {
+        "comment_body": "Поля «Бизнес-блок заказчика» и «Team» автоматически заполнены сервисом [«Управление зависимостями»|mailto:dependencies@sberbank.ru] SberWorks.",
+        "comment_last_update": "2025-07-28T10:47:21.756+0300"
+      }
+    ],
+    "description": "[https://console.firebase.google.com/u/0/project/sbol-ios-alfa/crashlytics/app/android:ru.sberbankmobile/issues/b741b5e7abbb6bbbae32af8a1a4d45cf?time=last-thirty-days&types=crash&sessionEventKey=68866BDC019100017328E21A2A0BA5F2_2110271696297368147]\r\n{code:java}\r\n          Fatal Exception: java.lang.IllegalArgumentException: Padding must be non-negative\r\n       at androidx.compose.foundation.layout.PaddingElement.<init>(PaddingElement.java:353)\r\n       at androidx.compose.foundation.layout.PaddingElement.<init>(PaddingElement.java:11)\r\n       at androidx.compose.foundation.layout.PaddingKt.padding-qDBjuR0(Padding.kt:55)\r\n       at androidx.compose.foundation.layout.PaddingKt.padding-qDBjuR0$default(Padding.kt:50)\r\n       at ru.sberbank.mobile.feature.prime.impl.stories.presentation.compose.items.StoriesTimerSectionsKt.StoriesTimerSections-Bx497Mc(StoriesTimerSections.kt:56)\r\n       at ru.sberbank.mobile.feature.prime.impl.stories.presentation.compose.items.StoriesTimerSectionsKt.StoriesTimerSections_Bx497Mc$lambda$4(StoriesTimerSections.kt:24)\r\n       at androidx.compose.runtime.RecomposeScopeImpl.compose(RecomposeScopeImpl.java:192)\r\n       at androidx.compose.runtime.ComposerImpl.recomposeToGroupEnd(ComposerImpl.java:2825)\r\n       at androidx.compose.runtime.ComposerImpl.skipCurrentGroup(ComposerImpl.java:3116)\r\n       at androidx.compose.runtime.ComposerImpl.doCompose(ComposerImpl.java:3607)\r\n       at androidx.compose.runtime.ComposerImpl.recompose$runtime_release(ComposerImpl.java:3552)\r\n       at androidx.compose.runtime.CompositionImpl.recompose(CompositionImpl.java:948)\r\n       at androidx.compose.runtime.Recomposer.performRecompose(Recomposer.java:1206)\r\n       at androidx.compose.runtime.Recomposer.access$performRecompose(Recomposer.java:132)\r\n       at androidx.compose.runtime.Recomposer$runRecomposeAndApplyChanges$2$1.invoke(Recomposer.java:616)\r\n       at androidx.compose.runtime.Recomposer$runRecomposeAndApplyChanges$2$1.invoke(Recomposer.java:585)\r\n       at androidx.compose.ui.platform.AndroidUiFrameClock$withFrameNanos$2$callback$1.doFrame(AndroidUiFrameClock.java:41)\r\n       at androidx.compose.ui.platform.AndroidUiDispatcher.performFrameDispatch(AndroidUiDispatcher.java:109)\r\n       at androidx.compose.ui.platform.AndroidUiDispatcher.access$performFrameDispatch(AndroidUiDispatcher.java:41)\r\n       at androidx.compose.ui.platform.AndroidUiDispatcher$dispatchCallback$1.doFrame(AndroidUiDispatcher.java:69)\r\n       at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1568)\r\n       at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1579)\r\n       at android.view.Choreographer.doCallbacks(Choreographer.java:1179)\r\n       at android.view.Choreographer.doFrame(Choreographer.java:1104)\r\n       at android.view.Choreographer$FrameDisplayEventReceiver.run(Choreographer.java:1553)\r\n       at android.os.Handler.handleCallback(Handler.java:995)\r\n       at android.os.Handler.dispatchMessage(Handler.java:103)\r\n       at android.os.Looper.loopOnce(Looper.java:248)\r\n       at android.os.Looper.loop(Looper.java:338)\r\n       at android.app.ActivityThread.main(ActivityThread.java:9067)\r\n       at java.lang.reflect.Method.invoke(Method.java)\r\n       at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)\r\n       at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)\r\n         {code}"
+  },
+  {
+    "project": "SUBS",
+    "key": "SUBS-22070",
+    "updated": "2025-07-28T10:03:37.000+0300",
+    "created": "2025-07-28T10:03:25.000+0300",
+    "summary": "[МП ЕФС] Горизонтальный баннер в ЛК - предусмотреть возможность фильтрации по subscriptionPeriod",
+    "comments": [],
+    "description": null
+  },
+  {
+    "project": "SUBS",
+    "key": "SUBS-22069",
+    "updated": "2025-07-25T19:35:49.000+0300",
+    "created": "2025-07-25T19:35:41.000+0300",
+    "summary": "[UX-Realization] Замечания по фиче: [МП IOS] Личный кабинет",
+    "comments": [],
+    "description": "На этапе UX-реализации зафиксированы замечания для фичи: [МП IOS] Личный кабинет. Подробнее в задаче: https://jira.sberbank.ru/browse/DBPUXUI-23374"
+  },
+  {
+    "project": "SUBS",
+    "key": "SUBS-22068",
+    "updated": "2025-07-26T04:13:10.000+0300",
+    "created": "2025-07-25T17:49:06.000+0300",
+    "summary": "[D-01.004.00 epfb2c-sowa-pprbcards-p2pc] Добавление поля \"CreateMatchingDate\" в схему валидации xferRs",
+    "comments": [],
+    "description": null
+  },
+  {
+    "project": "SUBS",
+    "key": "SUBS-22067",
+    "updated": "2025-07-25T16:39:16.000+0300",
+    "created": "2025-07-25T16:39:06.000+0300",
+    "summary": "[ЕФС_Тестирование] После активации промокода через новую витрину нет мсс",
+    "comments": [],
+    "description": "По пакету должен отображаться мсс и баннер о недоступности подключения. Почему его нет?"
+  },
+  {
+    "project": "SUBS",
+    "key": "SUBS-22066",
+    "updated": "2025-07-25T16:11:36.000+0300",
+    "created": "2025-07-25T16:11:26.000+0300",
+    "summary": "[ЕФС_Разработка] Пустая витрина, если есть действующий заказ",
+    "comments": [],
+    "description": null
+  },
+  {
+    "project": "SUBS",
+    "key": "SUBS-22065",
+    "updated": "2025-07-25T15:45:58.000+0300",
+    "created": "2025-07-25T15:45:43.000+0300",
+    "summary": "105 алгоритм",
+    "comments": [],
+    "description": "Сценарий:\r\nЕсть сотрудник с льготой и plan_review_date not null в таблице rank. Запускаем плановый перерасчет, который ожидаемо должен быть с ошибкой от UCP.\r\n\r\nОР:  \r\nТак как у сотрудника plan_review_date not null, то plan_review_date увеличивается на *jobs.plan-rank-review-processor.error-days-increment* дней\r\n\r\nФР:\r\nplan_review_date удаляется и следующий перерасчет сотрудника уже произойдет из таблицы reprocessing_inbound_event_request"
+  },
+  {
+    "project": "SUBS",
+    "key": "SUBS-22064",
+    "updated": "2025-07-25T15:12:42.000+0300",
+    "created": "2025-07-25T15:12:32.000+0300",
+    "summary": "[ПРО_Тестирование] Отображение на экранах повторных триалов",
+    "comments": [
+      {
+        "comment_body": "(!) Внимание, команда в поле «Team» не совпадает с командой Исполнителя, при необходимости поменяйте значение вручную. Сервис [«Управление зависимостями»|mailto:dependencies@sberbank.ru] SberWorks.",
+        "comment_last_update": "2025-07-25T15:12:35.248+0300"
+      },
+      {
+        "comment_body": "Поля «Бизнес-блок заказчика» и «Team» автоматически заполнены сервисом [«Управление зависимостями»|mailto:dependencies@sberbank.ru] SberWorks.",
+        "comment_last_update": "2025-07-25T15:12:37.446+0300"
+      }
+    ],
+    "description": "Требования к макетам пришлет заказчик - Максимов Петр\r\n\r\nЧто нужно сделать:\r\n\r\n1 пакет: стоимость триала 199, который действует 12 месяцев, то есть 12 раз подряд должна быть стоимость 199, далее с 13 месяца 299.\r\n\r\n2 пакет: стоимость триала 1990, действует 12 месяцев (или 365 дней) и далее 2990 в год.\r\n\r\nЧто важного: нужно проверить и все экраны прошки и МП СБОЛ главный экран"
+  },
+  {
+    "project": "SUBS",
+    "key": "SUBS-22063",
+    "updated": "2025-07-25T16:41:58.000+0300",
+    "created": "2025-07-25T14:50:25.000+0300",
+    "summary": "D-01.008.01 (epfb2c-pprb-management-scheduler)",
+    "comments": [],
+    "description": null
+  }
+]

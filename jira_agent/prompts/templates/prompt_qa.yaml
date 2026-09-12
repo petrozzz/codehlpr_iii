@@ -1,0 +1,4 @@
+input_variables: !!set
+  context: null
+  query: null
+template: "\n<s>[INST] <<SYS>>\nYour task is to write a Python function to solve a programming problem.\nYou are given problem and several code examples which you can use as reference.\nCode examples: \n{context}\n<</SYS>>\nProblem: {query}[/INST] Your Answer </s>"
